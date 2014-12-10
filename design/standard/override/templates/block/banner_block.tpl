@@ -1,0 +1,1 @@
+{$block.view}-{$block.name|wash()}
