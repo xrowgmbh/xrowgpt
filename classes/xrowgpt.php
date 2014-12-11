@@ -174,41 +174,26 @@ class xrowgpt
         return array( "keyword" => $normal_keyword, "path" => $path, "ivw_keyword" => $ivw_keyword, "ivw_sv" => $ivw_sv );
     }
 
-    // used inside the body for IVW tracking. Must be loaded always \\
-    // function loaded by ajax function
-    public static function buildIVWCode( $device_info = array(), $node = false )
+    public static function buildIVWCode( $node = false )
     {
         $xrowgptINI = eZINI::instance("xrowgpt.ini");
+        $string = "";
         if ( $xrowgptINI->variable( 'IVWSettings', 'Enabled' ) == "true" )
         {
             //todo, wo kommt die node her?
-            $keyword_info = $this->getKeyword( $node );
-
-            if( $device_info["device"] != "desktop" )
-            {
-                if( $device_info["breakpoint"] <= 2)
-                {
-                    $device_letter = "t";
-                }
-                else
-                {
-                    $device_letter = "m";
-                }
-                return '<!-- SZM VERSION="2.0" -->
-                        <script type="text/javascript">
+            $keyword_info = xrowgpt::getKeyword( $node );
+            $string .= '<script type="text/javascript">
+                        if (device != "desktop"){
+                        <!-- SZM VERSION="2.0" -->
                         var iam_data = {
                         "st":"hannovin", // site
-                        "cp":"' . $keyword_info["ivw_keyword"] . '_'. $device_letter . '", // code SZMnG-System 2.0
+                        "cp":"' . $keyword_info["ivw_keyword"] . '_" + ivwletter, // code SZMnG-System 2.0
                         "sv":"mo"
                         }
                         iom.c(iam_data, 1);
-                        </script>
-                        <!--/SZM -->';
-            }
-            else
-            {
-                return '<!-- SZM VERSION="2.0" -->
-                        <script type="text/javascript">
+                        <!--/SZM -->
+                        }else{
+                        <!-- SZM VERSION="2.0" -->
                         var iam_data = {
                         "st":"hannovin", // site
                         "cp":"' . $keyword_info["ivw_keyword"] . '", // code SZMnG-System 2.0
@@ -216,246 +201,246 @@ class xrowgpt
                         "co":"kommentar" // comment
                         }
                         iom.c(iam_data, 1);
-                        </script>
-                        <!--/SZM -->';
-            }
+                        <!--/SZM -->
+                        }
+                        </script>';
         }
-        //fallback return empty
-        return "";
+        return $string;
     }
 
-    public static function buildGPTCode( $device_info = array(), $keyword = array(), $site = ""  )
+    public static function buildGPTCode( $keyword = array() )
     {
         $xrowgptINI = eZINI::instance("xrowgpt.ini");
         $oms_code = $xrowgptINI->variable( 'OmsSettings', 'OmsCode' );
-        if( $device_info["device"] != "desktop" )
+        $site = $xrowgptINI->variable( 'OmsSettings', 'OmsSite' );
+        $oms_site_mobile = $xrowgptINI->variable( 'OmsSettings', 'OmsSiteMobile' );
+        $string = "";
+        $custom_tags = "";
+        $path = $keyword["path"];
+
+        if ( empty($path) )
         {
-            return '<!-- nugg.ad mobile call -->
-            <script type="text/javascript">
-                var oms_site="' . $site . '";
-                var WLRCMD="";
-                var oms_network="' . $keyword["keyword"] . '";
-                var nuggn='.$xrowgptINI->variable( 'OmsSettings', 'Nuggn' ).';
-                var nugghost="http://"+oms_network+".nuggad.net";
-            </script>
-            
-            <script type="text/javascript" src="http://oms.nuggad.net/javascripts/nuggad-ls.js"></script>
-            
-            <!-- google mobile gpt -->
-            <script type=\'text/javascript\'>
-                nuggad.init({"rptn-url": nugghost}, function(api) {
-                    api.rc({"nuggn": nuggn});
-                });
-
-                (function() {
-                    var useSSL = \'https:\' == document.location.protocol;
-                    var src = (useSSL ? \'https:\' : \'http:\') +
-                    \'//www.googletagservices.com/tag/js/gpt_mobile.js\';
-                    document.write(\'<scr\' + \'ipt src="\' + src + \'"></scr\' + \'ipt>\');
-                })();
-            </script>
-
-            <script type="text/javascript">
-
-                //!-- Aufbereitung WLRCMD Variable --
-                var NUGGarr=Array();
-                if (typeof WLRCMD !=\'undefined\' && WLRCMD !=\'\')
-                { arrALL=WLRCMD.split(";");
-                for (TUPL in arrALL) {
-                    if (arrALL[TUPL].indexOf(\'=\') !=-1){
-                        NUGGarr[arrALL[TUPL].split(\'=\')[0]]=arrALL[TUPL].split(\'=\')[1];
-                    }
-                }
-                }
-                //!-- ENDE Aufbereitung WLRCMD Variable --
-
-                if (window.innerWidth >= 800) {
-                    googletag.cmd.push(function() {
-                        googletag.defineSlot(\'/".$oms_code."/\'+oms_site+\'/\'+oms_zone,[[728, 90],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
-                        googletag.defineSlot(\'/".$oms_code."/\'+oms_site+\'/\'+oms_zone,[[728, 90],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
-                        googletag.defineSlot(\'/".$oms_code."/\'+oms_site+\'/\'+oms_zone,[[728, 90],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-2\').addService(googletag.pubads());
-                        googletag.defineSlot(\'/".$oms_code."/\'+oms_site+\'/\'+oms_zone,[[728, 90],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-3\').addService(googletag.pubads());
-                        googletag.pubads().setTargeting(\'nielsen\',\'1\');
-                        if (typeof NUGGarr !=\'undefined\') {
-                            for (var key in NUGGarr) {
-                                googletag.pubads().setTargeting(key, NUGGarr[key]);
-                            }
-                        };
-                        googletag.enableServices();
-                    });
-
-                } else if (window.innerWidth < 400) {
-                    googletag.cmd.push(function() {
-                        googletag.defineSlot(\'/".$oms_code."/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
-                        googletag.defineSlot(\'/".$oms_code."/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
-                        googletag.defineSlot(\'/".$oms_code."/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-2\').addService(googletag.pubads());
-                        googletag.defineSlot(\'/".$oms_code."/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-3\').addService(googletag.pubads());
-                        googletag.pubads().setTargeting(\'nielsen\',\'1\');
-                        if (typeof NUGGarr !=\'undefined\') {
-                            for (var key in NUGGarr) {
-                                googletag.pubads().setTargeting(key, NUGGarr[key]);
-                            }
-                        };
-                        googletag.enableServices();
-                    });
-                } else {
-                    googletag.cmd.push(function() {
-                        googletag.defineSlot(\'/".$oms_code."/\'+oms_site+\'/\'+oms_zone,[[468, 60],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
-                        googletag.defineSlot(\'/".$oms_code."/\'+oms_site+\'/\'+oms_zone,[[468, 60],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
-                        googletag.defineSlot(\'/".$oms_code."/\'+oms_site+\'/\'+oms_zone,[[468, 60],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-2\').addService(googletag.pubads());
-                        googletag.defineSlot(\'/".$oms_code."/\'+oms_site+\'/\'+oms_zone,[[468, 60],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-3\').addService(googletag.pubads());
-                        googletag.pubads().setTargeting(\'nielsen\',\'1\');
-                        if (typeof NUGGarr !=\'undefined\') {
-                            for (var key in NUGGarr) {
-                                googletag.pubads().setTargeting(key, NUGGarr[key]);
-                            }
-                        };
-                        googletag.enableServices();
-                    });
-                }
-            
-            </script>
-            <!-- Ende Einbau im Header -->';
+            $custom_tags = "googletag.pubads().setTargeting('NodeID', " . $GLOBALS['eZRequestedModuleParams']["module_name"] . "_" . $GLOBALS['eZRequestedModuleParams']["function_name"] . " );";
         }
         else
         {
-            $custom_tags = "";
-            $path = $keyword["path"];
-            
-            if ( empty($path) )
+            $custom_tags = "googletag.pubads().setTargeting('NodeID', " . end($path) . " );";
+            foreach( $path as $i => $path_element )
             {
-                $custom_tags = "googletag.pubads().setTargeting('NodeID', " . $GLOBALS['eZRequestedModuleParams']["module_name"] . "_" . $GLOBALS['eZRequestedModuleParams']["function_name"] . " );";
-            }
-            else
-            {
-                $custom_tags = "googletag.pubads().setTargeting('NodeID', " . end($path) . " );";
-                foreach( $path as $i => $path_element )
+                $custom_tags .= "googletag.pubads().setTargeting('TreeL". $i ."', ". $path_element ." );";
+                if( $i === 5 )
                 {
-                    $custom_tags += "googletag.pubads().setTargeting('TreeL". $i ."', ". $path_element ." );";
-                    if( $i === 5 )
+                    break;
+                }
+            }
+        }
+
+        $string .= '<script type="text/javascript">
+        if (device != "desktop"){
+        <!-- nugg.ad mobile call -->
+
+        var oms_site="' . $oms_site_mobile . '";
+        var WLRCMD="";
+        var oms_network="' . $keyword["keyword"] . '";
+        var nuggn='.$xrowgptINI->variable( 'OmsSettings', 'Nuggn' ).';
+        var nugghost="http://"+oms_network+".nuggad.net";
+
+        (function() {
+            var src = "http://oms.nuggad.net/javascripts/nuggad-ls.js";
+            document.write(\'<scr\' + \'ipt src="\' + src + \'"></scr\' + \'ipt>\');
+        })();
+
+        <!-- google mobile gpt -->
+            nuggad.init({"rptn-url": nugghost}, function(api) {
+                api.rc({"nuggn": nuggn});
+            });
+
+            (function() {
+                var useSSL = \'https:\' == document.location.protocol;
+                var src = (useSSL ? \'https:\' : \'http:\') +
+                \'//www.googletagservices.com/tag/js/gpt_mobile.js\';
+                document.write(\'<scr\' + \'ipt src="\' + src + \'"></scr\' + \'ipt>\');
+            })();
+
+
+            //!-- Aufbereitung WLRCMD Variable --
+            var NUGGarr=Array();
+            if (typeof WLRCMD !=\'undefined\' && WLRCMD !=\'\')
+            { arrALL=WLRCMD.split(";");
+            for (TUPL in arrALL) {
+                if (arrALL[TUPL].indexOf(\'=\') !=-1){
+                    NUGGarr[arrALL[TUPL].split(\'=\')[0]]=arrALL[TUPL].split(\'=\')[1];
+                }
+            }
+            }
+            //!-- ENDE Aufbereitung WLRCMD Variable --
+
+            if (window.innerWidth >= 800) {
+                googletag.cmd.push(function() {
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[728, 90],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[728, 90],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[728, 90],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-2\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[728, 90],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-3\').addService(googletag.pubads());
+                    googletag.pubads().setTargeting(\'nielsen\',\'1\');
+                    if (typeof NUGGarr !=\'undefined\') {
+                        for (var key in NUGGarr) {
+                            googletag.pubads().setTargeting(key, NUGGarr[key]);
+                        }
+                    };
+                    googletag.enableServices();
+                });
+
+            } else if (window.innerWidth < 400) {
+                googletag.cmd.push(function() {
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-2\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-3\').addService(googletag.pubads());
+                    googletag.pubads().setTargeting(\'nielsen\',\'1\');
+                    if (typeof NUGGarr !=\'undefined\') {
+                        for (var key in NUGGarr) {
+                            googletag.pubads().setTargeting(key, NUGGarr[key]);
+                        }
+                    };
+                    googletag.enableServices();
+                });
+            } else {
+                googletag.cmd.push(function() {
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[468, 60],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[468, 60],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[468, 60],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-2\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[468, 60],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-3\').addService(googletag.pubads());
+                    googletag.pubads().setTargeting(\'nielsen\',\'1\');
+                    ' .$custom_tags . '
+                    if (typeof NUGGarr !=\'undefined\') {
+                        for (var key in NUGGarr) {
+                            googletag.pubads().setTargeting(key, NUGGarr[key]);
+                        }
+                    };
+                    googletag.enableServices();
+                });
+            }
+        
+        <!-- Ende Einbau im Header -->
+        }else{
+        //Synchron Call
+        
+        (function() {
+            var useSSL = "https:" == document.location.protocol;
+            var src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
+            document.write("<scr" + "ipt src=\'" + src + "\'></scr" + "ipt>");
+        })();
+        
+        
+            googletag.cmd.push(function() {
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 90], "oms_gpt_superbanner").addService(googletag.pubads());
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [[120, 600],[160, 600],[200, 600]], "oms_gpt_skyscraper").addService(googletag.pubads());
+            
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 60], "oms_gpt_fullbanner").addService(googletag.pubads());
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 61], "oms_gpt_fullbanner1").addService(googletag.pubads());
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 62], "oms_gpt_fullbanner2").addService(googletag.pubads());
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 63], "oms_gpt_fullbanner3").addService(googletag.pubads());
+            
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner1").addService(googletag.pubads());
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner2").addService(googletag.pubads());
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 92], "oms_gpt_superbanner3").addService(googletag.pubads());
+            
+                googletag.pubads().enableSingleRequest();
+                googletag.pubads().enableSyncRendering(); // Add sync rendering mode
+                ' . $custom_tags . '
+                
+                <!-- Hier wird das Bundesland definiert -->
+            
+                googletag.enableServices();
+                googletag.pubads().setTargeting("bundesland","NI");
+            
+                if (typeof WLRCMD !="undefined" && WLRCMD !="")
+                {
+                    temp=WLRCMD.split(";");
+                    for (var id in temp) {
+                        if (temp[id].indexOf("=") != -1){
+                            values = temp[id].split("=")[1];
+                        
+                            for (var id2 in temp) {
+                                if ((temp[id2].indexOf("=") != -1) && (temp[id].split("=")[0] == temp[id2].split("=")[0]) && (id < id2)){
+                                values += ";"+temp[id2].split("=")[1];
+                                delete temp[id2];
+                                }
+                            }
+                            temp2 = values.split(";");
+                            //console.log(temp[id].split("=")[0]+" "+temp2)
+                            //console.log(\"googletag.pubads().setTargeting(\"+temp[id].split("=")[0]+\", \"+temp2+\")\");
+                            googletag.pubads().setTargeting(temp[id].split("=")[0], temp2);
+                        }
+                    }
+                }
+            
+            });
+        }</script>';
+        return $string;
+    }
+
+    public static function getSettingVariables()
+    {
+        $string = '<script language="JavaScript" type="text/javascript">';
+        $xrowgptINI = eZINI::instance("xrowgpt.ini");
+        $bp_settings = $xrowgptINI->group( "BreakPoints" );
+        $string .= "var page_width = window.innerWidth;";
+        $string .= "var breakpoints = [];";
+        
+        foreach ( $bp_settings[Breakpoint] as $number => $size)
+        {
+            $string.= 'breakpoints[' . $number . '] = "' . $size . '";';
+        }
+
+        $string .= "var tabletbreakpoint = " . $xrowgptINI->variable( 'BreakPointInfos', 'DesktopToTabletEdge' ) . ";";
+        $string .= "var mobilebreakpoint = " . $xrowgptINI->variable( 'BreakPointInfos', 'TabletToMobileEdge' ) . ";";
+        $string .= "var device = 'desktop';";
+        $string .= "var ivwletter = '';";
+        $string .= "var current_breakpoint = '';";
+        
+        $string .= "
+                for (i = 1; i < breakpoints.length; i++) {
+                    if ( page_width < breakpoints[i] )
                     {
+                        var current_breakpoint = i;
+                        if ( current_breakpoint <=  tabletbreakpoint)
+                        {
+                            var device = 'tablet';
+                            var ivwletter = 't';
+                        }
+                        if ( current_breakpoint <=  mobilebreakpoint)
+                        {
+                            var device = 'mobile';
+                            var ivwletter = 'm';
+                        }
                         break;
                     }
                 }
-            }
-            
-            return "<script type='text/javascript'>
-            //Synchron Call
-            
-            (function() {
-                var useSSL = 'https:' == document.location.protocol;
-                var src = (useSSL ? 'https:' : 'http:') + '//www.googletagservices.com/tag/js/gpt.js';
-                document.write('<scr' + 'ipt src=\"' + src + '\"></scr' + 'ipt>');
-            })();
-            
-            </script>
-            
-            <script type='text/javascript'>
-                googletag.cmd.push(function() {
-                    googletag.defineSlot('/".$oms_code."/'+oms_site+'/'+oms_zone, [728, 90], 'oms_gpt_superbanner').addService(googletag.pubads());
-                    googletag.defineSlot('/".$oms_code."/'+oms_site+'/'+oms_zone, [[120, 600],[160, 600],[200, 600]], 'oms_gpt_skyscraper').addService(googletag.pubads());
-                
-                    googletag.defineSlot('/".$oms_code."/'+oms_site+'/'+oms_zone, [468, 60], 'oms_gpt_fullbanner').addService(googletag.pubads());
-                    googletag.defineSlot('/".$oms_code."/'+oms_site+'/'+oms_zone, [468, 61], 'oms_gpt_fullbanner1').addService(googletag.pubads());
-                    googletag.defineSlot('/".$oms_code."/'+oms_site+'/'+oms_zone, [468, 62], 'oms_gpt_fullbanner2').addService(googletag.pubads());
-                    googletag.defineSlot('/".$oms_code."/'+oms_site+'/'+oms_zone, [468, 63], 'oms_gpt_fullbanner3').addService(googletag.pubads());
-                
-                    googletag.defineSlot('/".$oms_code."/'+oms_site+'/'+oms_zone, [728, 91], 'oms_gpt_superbanner1').addService(googletag.pubads());
-                    googletag.defineSlot('/".$oms_code."/'+oms_site+'/'+oms_zone, [728, 91], 'oms_gpt_superbanner2').addService(googletag.pubads());
-                    googletag.defineSlot('/".$oms_code."/'+oms_site+'/'+oms_zone, [728, 92], 'oms_gpt_superbanner3').addService(googletag.pubads());
-                
-                    googletag.pubads().enableSingleRequest();
-                    googletag.pubads().enableSyncRendering(); // Add sync rendering mode
-                    " .$custom_tags . "
-                    
-                    <!-- Hier wird das Bundesland definiert -->
-                
-                    googletag.enableServices();
-                    googletag.pubads().setTargeting('bundesland','NI');
-                
-                    if (typeof WLRCMD !='undefined' && WLRCMD !='')
-                    {
-                        temp=WLRCMD.split(";");
-                        for (var id in temp) {
-                            if (temp[id].indexOf('=') != -1){
-                                values = temp[id].split('=')[1];
-                            
-                                for (var id2 in temp) {
-                                    if ((temp[id2].indexOf('=') != -1) && (temp[id].split('=')[0] == temp[id2].split('=')[0]) && (id < id2)){
-                                    values += ';'+temp[id2].split('=')[1];
-                                    delete temp[id2];
-                                    }
-                                }
-                                temp2 = values.split(";");
-                                //	console.log(temp[id].split('=')[0]+' '+temp2)
-                                //console.log(\"googletag.pubads().setTargeting(\"+temp[id].split('=')[0]+\", \"+temp2+\")\");
-                                googletag.pubads().setTargeting(temp[id].split('=')[0], temp2);
-                            }
-                        }
-                    }
-                
-                });
-            </script>";
-        }
+                </script>";
+
+        return $string;
     }
 
-    public static function getDeviceInformation( $page_width = false )
-    {
-        if ( $page_width === false )
-        {
-            eZDebug:writeError("The page width is not unknown");
-            return false;
-        }
-
-        $information = array();
-        $information["size"] = $page_width;
-        $xrowgptINI = eZINI::instance("xrowgpt.ini");
-        foreach ( $xrowgptINI->group( "BreakPoints" ) as $number => $size)
-        {
-            if( $page_width > $size )
-            {
-                $information["breakpoint"] = $number-1;
-                break;
-            }
-        }
-        
-        //set desktop default
-        $information["device"] = "desktop";
-        //if breakpoint is above the edge to tablet, override the default to tablet ;)
-        if ( $information["breakpoint"] >= $xrowgptINI->variable( 'BreakPointInfos', 'DesktopToTabletEdge' ) )
-        {
-            $information["device"] = "tablet";
-        }
-
-        //if breakpoint is above the edge to mobile, override the default to mobile ;)
-        if ( $information["breakpoint"] >= $xrowgptINI->variable( 'BreakPointInfos', 'TabletToMobileEdge' ) )
-        {
-            $information["device"] = "mobile";
-        }
-
-        return $information;
-    }
-
-    public static function buildHeaderCode( $device_info = array() )
+    public static function buildHeaderCode()
     {
         $xrowgptINI = eZINI::instance("xrowgpt.ini");
-        $string = "";
-        
-        $show_ads = $this->checkDisplayStatus();
-        
+        $show_ads = xrowgpt::checkDisplayStatus();
+
+        $string .= xrowgpt::getSettingVariables();
+
         //add ivw script when module is activated
         if ( $xrowgptINI->variable( 'IVWSettings', 'Enabled' ) == "true" )
         {
-            $string = '<script type="text/javascript" src="https://script.ioam.de/iam.js"></script>';
+            $string .= '<script type="text/javascript" src="https://script.ioam.de/iam.js"></script>';
         }
-        
+
         //add oms stuff when ads are displayed
         if( $show_ads )
         {
             //TODO: $node statt false. verbessern?
-            $keyword_info = $this->getKeyword( false );
-            
-            $string += '<script language="JavaScript" type="text/javascript">
+            $keyword_info = xrowgpt::getKeyword( false );
+            $string .= '<script language="JavaScript" type="text/javascript">
                         var oms_site = "' . $xrowgptINI->variable( 'OmsSettings', 'OmsSite' ) . '";
                         var oms_zone = "' . $keyword_info["keyword"] . '";
                         </script>
@@ -480,55 +465,9 @@ class xrowgpt
                         {}
                         </script>';
 
-            if ( count( $device_info ) >= 1 )
-            {
-                $string += $this->buildGPTCode($device_info, $keyword_info, $xrowgptINI->variable( 'OmsSettings', 'OmsSite' ));
-            }
+            $string .= xrowgpt::buildGPTCode($keyword_info);
         }
-        
+
         return $string;
-    }
-
-    public static function createAdCodes( $banner_fields = array(), $device_info = array() )
-    {
-        if ( count($banner_fields) == 0 )
-        {
-            eZDebug:writeError("No bannerfields found.");
-            return false;
-        }
-        
-        $xrowgptINI = eZINI::instance("xrowgpt.ini");
-        if( !$xrowgptINI->hasSection( "oms_" . $device_info["device"] . "_ads" ) )
-        {
-            eZDebug:writeError("Could not find AD settings for this device");
-            return false;
-        }
-        else
-        {
-            $BannerZones = $xrowgptINI->variable( "oms_" . $device_info["device"] . "_ads", "BannerZone" );
-        }
-        
-        $codes = array();
-        foreach ( $banner_fields as $zone )
-        {
-            $id = $BannerZones[$zone];
-            //get $id from zone via $ini
-            $codes[$zone] = "<div id='".$id."'>
-                    <script type='text/javascript'>
-                    googletag.cmd.push(function() { googletag.display('".$id."')});
-                    </script>
-                    </div>";
-        }
-        return $codes;
-    }
-
-    public static function load( $banner_fields = array(), $page_width = false )
-    {
-        $device_info = $this->getDeviceInformation( $page_width );
-        $html = array();
-        $html["header"] = $this->buildHeaderCode($device_info);
-        $html["ivw"] = $this->buildIVWCode($device_info);
-        $html["adcodes"] = $this->createAdCodes($device_info);
-        return $html;
     }
 }

@@ -3,7 +3,4 @@
 [ExtensionSettings]
 DesignExtensions[]=xrowgpt
 
-[JavaScriptSettings]
-FrontendJavaScriptList[]=xrowgpt.js
-
 */ ?>
