@@ -297,17 +297,17 @@ class xrowgpt
         <!-- Ende Einbau im Header -->
         }else{
             googletag.cmd.push(function() {
-                if (window.innerWidth >= 1030) {
+                if (page_width >= 1030) {
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [[120, 600],[160, 600],[200, 600]], "oms_gpt_skyscraper").addService(googletag.pubads());
                 }
 
-                if (window.innerWidth >= 748) {
+                if (page_width >= 748) {
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 90], "oms_gpt_superbanner").addService(googletag.pubads());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner1").addService(googletag.pubads());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner2").addService(googletag.pubads());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 92], "oms_gpt_superbanner3").addService(googletag.pubads());
                 }
-                else if (window.innerWidth >= 488) {
+                else if (page_width >= 488) {
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 60], "oms_gpt_fullbanner").addService(googletag.pubads());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 61], "oms_gpt_fullbanner1").addService(googletag.pubads());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 62], "oms_gpt_fullbanner2").addService(googletag.pubads());
@@ -316,19 +316,18 @@ class xrowgpt
                 googletag.pubads().enableSingleRequest();
                 googletag.pubads().enableSyncRendering(); // Add sync rendering mode
                 ' . $custom_tags . '
-                
+
                 <!-- Hier wird das Bundesland definiert -->
-            
+
                 googletag.enableServices();
                 googletag.pubads().setTargeting("bundesland","NI");
-            
+
                 if (typeof WLRCMD !="undefined" && WLRCMD !="")
                 {
                     temp=WLRCMD.split(";");
                     for (var id in temp) {
                         if (temp[id].indexOf("=") != -1){
                             values = temp[id].split("=")[1];
-                        
                             for (var id2 in temp) {
                                 if ((temp[id2].indexOf("=") != -1) && (temp[id].split("=")[0] == temp[id2].split("=")[0]) && (id < id2)){
                                 values += ";"+temp[id2].split("=")[1];
@@ -342,7 +341,6 @@ class xrowgpt
                         }
                     }
                 }
-            
             });
         }</script>';
         return $string;
