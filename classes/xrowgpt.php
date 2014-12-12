@@ -220,14 +220,14 @@ class xrowgpt
 
         if ( empty($path) )
         {
-            $custom_tags = "googletag.pubads().setTargeting('NodeID', " . $GLOBALS['eZRequestedModuleParams']["module_name"] . "_" . $GLOBALS['eZRequestedModuleParams']["function_name"] . " );";
+            $custom_tags = 'googletag.pubads().setTargeting("NodeID", ' . $GLOBALS["eZRequestedModuleParams"]['module_name'] . '_' . $GLOBALS["eZRequestedModuleParams"]['function_name'] . ' );';
         }
         else
         {
-            $custom_tags = "googletag.pubads().setTargeting('NodeID', " . end($path) . " );";
+            $custom_tags = 'googletag.pubads().setTargeting("NodeID", ' . end($path) . ' );';
             foreach( $path as $i => $path_element )
             {
-                $custom_tags .= "googletag.pubads().setTargeting('TreeL". $i ."', ". $path_element ." );";
+                $custom_tags .= 'googletag.pubads().setTargeting("TreeL'. $i .'", '. $path_element .' );';
                 if( $i === 5 )
                 {
                     break;
@@ -236,7 +236,23 @@ class xrowgpt
         }
 
         $string .= '<script type="text/javascript">
-        if (device != "desktop"){
+         if (device == "mobile"){
+            var src = "http://oms.nuggad.net/javascripts/nuggad-ls.js";
+            document.write(\'<scr\' + \'ipt src="\' + src + \'"></scr\' + \'ipt>\');
+         }</script>
+                
+        <script type="text/javascript">
+            //Synchron Call
+            
+              (function() {
+                var useSSL = "https:" == document.location.protocol;
+                var src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/" + googletagservice_file;
+                document.write(\'<scr\' + \'ipt src="\' + src + \'"></scr\' + \'ipt>\');
+              })();
+        </script>
+
+        <script type="text/javascript">
+        if (device == "mobile"){
         <!-- nugg.ad mobile call -->
 
         var oms_site="' . $oms_site_mobile . '";
@@ -245,23 +261,10 @@ class xrowgpt
         var nuggn='.$xrowgptINI->variable( 'OmsSettings', 'Nuggn' ).';
         var nugghost="http://"+oms_network+".nuggad.net";
 
-        (function() {
-            var src = "http://oms.nuggad.net/javascripts/nuggad-ls.js";
-            document.write(\'<scr\' + \'ipt src="\' + src + \'"></scr\' + \'ipt>\');
-        })();
-
         <!-- google mobile gpt -->
             nuggad.init({"rptn-url": nugghost}, function(api) {
                 api.rc({"nuggn": nuggn});
             });
-
-            (function() {
-                var useSSL = \'https:\' == document.location.protocol;
-                var src = (useSSL ? \'https:\' : \'http:\') +
-                \'//www.googletagservices.com/tag/js/gpt_mobile.js\';
-                document.write(\'<scr\' + \'ipt src="\' + src + \'"></scr\' + \'ipt>\');
-            })();
-
 
             //!-- Aufbereitung WLRCMD Variable --
             var NUGGarr=Array();
@@ -275,22 +278,7 @@ class xrowgpt
             }
             //!-- ENDE Aufbereitung WLRCMD Variable --
 
-            if (window.innerWidth >= 800) {
-                googletag.cmd.push(function() {
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[728, 90],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[728, 90],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[728, 90],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-2\').addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[728, 90],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-3\').addService(googletag.pubads());
-                    googletag.pubads().setTargeting(\'nielsen\',\'1\');
-                    if (typeof NUGGarr !=\'undefined\') {
-                        for (var key in NUGGarr) {
-                            googletag.pubads().setTargeting(key, NUGGarr[key]);
-                        }
-                    };
-                    googletag.enableServices();
-                });
-
-            } else if (window.innerWidth < 400) {
+            if (window.innerWidth >= 340) {
                 googletag.cmd.push(function() {
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
@@ -304,47 +292,27 @@ class xrowgpt
                     };
                     googletag.enableServices();
                 });
-            } else {
-                googletag.cmd.push(function() {
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[468, 60],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[468, 60],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[468, 60],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-2\').addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[468, 60],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-3\').addService(googletag.pubads());
-                    googletag.pubads().setTargeting(\'nielsen\',\'1\');
-                    ' .$custom_tags . '
-                    if (typeof NUGGarr !=\'undefined\') {
-                        for (var key in NUGGarr) {
-                            googletag.pubads().setTargeting(key, NUGGarr[key]);
-                        }
-                    };
-                    googletag.enableServices();
-                });
             }
         
         <!-- Ende Einbau im Header -->
         }else{
-        //Synchron Call
-        
-        (function() {
-            var useSSL = "https:" == document.location.protocol;
-            var src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
-            document.write("<scr" + "ipt src=\'" + src + "\'></scr" + "ipt>");
-        })();
-        
-        
             googletag.cmd.push(function() {
-                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 90], "oms_gpt_superbanner").addService(googletag.pubads());
-                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [[120, 600],[160, 600],[200, 600]], "oms_gpt_skyscraper").addService(googletag.pubads());
-            
-                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 60], "oms_gpt_fullbanner").addService(googletag.pubads());
-                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 61], "oms_gpt_fullbanner1").addService(googletag.pubads());
-                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 62], "oms_gpt_fullbanner2").addService(googletag.pubads());
-                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 63], "oms_gpt_fullbanner3").addService(googletag.pubads());
-            
-                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner1").addService(googletag.pubads());
-                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner2").addService(googletag.pubads());
-                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 92], "oms_gpt_superbanner3").addService(googletag.pubads());
-            
+                if (window.innerWidth >= 1030) {
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [[120, 600],[160, 600],[200, 600]], "oms_gpt_skyscraper").addService(googletag.pubads());
+                }
+
+                if (window.innerWidth >= 748) {
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 90], "oms_gpt_superbanner").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner1").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner2").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 92], "oms_gpt_superbanner3").addService(googletag.pubads());
+                }
+                else if (window.innerWidth >= 488) {
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 60], "oms_gpt_fullbanner").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 61], "oms_gpt_fullbanner1").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 62], "oms_gpt_fullbanner2").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 63], "oms_gpt_fullbanner3").addService(googletag.pubads());
+                }
                 googletag.pubads().enableSingleRequest();
                 googletag.pubads().enableSyncRendering(); // Add sync rendering mode
                 ' . $custom_tags . '
@@ -416,9 +384,10 @@ class xrowgpt
                         }
                         break;
                     }
-                }
-                </script>";
-
+                }";
+         $string .= "var googletagservice_file = 'gpt.js';";
+         $string .= "if(device == 'mobile'){var googletagservice_file = 'gpt_mobile.js';}";
+         $string .= "</script>";
         return $string;
     }
 

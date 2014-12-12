@@ -1,6 +1,6 @@
 {if $block.view|eq("pos1")}
     {literal}
-    <div class="xrowgpt_ad" id="flowblock1">
+    <div class="xrowgpt_ad" id="ad_flowblock1">
         <div id="oms_gpt_fullbanner1">
             <script type="text/javascript">
                 googletag.cmd.push(function()  { googletag.display('oms_gpt_fullbanner1')});
@@ -22,7 +22,7 @@
     {/literal}
 {else}
     {literal}
-    <div class="xrowgpt_ad" id="flowblock2">
+    <div class="xrowgpt_ad" id="ad_flowblock2">
         <div id="oms_gpt_fullbanner2">
             <script type="text/javascript">
                 googletag.cmd.push(function()  { googletag.display('oms_gpt_fullbanner2')});
