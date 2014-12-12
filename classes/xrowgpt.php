@@ -389,7 +389,7 @@ class xrowgpt
         return $string;
     }
 
-    public static function buildHeaderCode()
+    public static function buildHeaderCode( $node = false  )
     {
         $xrowgptINI = eZINI::instance("xrowgpt.ini");
         $show_ads = xrowgpt::checkDisplayStatus();
@@ -406,7 +406,7 @@ class xrowgpt
         if( $show_ads )
         {
             //TODO: $node statt false. verbessern?
-            $keyword_info = xrowgpt::getKeyword( false );
+            $keyword_info = xrowgpt::getKeyword( $node );
             $string .= '<script language="JavaScript" type="text/javascript">
                         var oms_site = "' . $xrowgptINI->variable( 'OmsSettings', 'OmsSite' ) . '";
                         var oms_zone = "' . $keyword_info["keyword"] . '";
