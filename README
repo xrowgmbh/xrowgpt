@@ -1,0 +1,8 @@
+- download extension
+- activate extension
+- run autoloads
+- change ini settings according to your needs
+- clear cache
+- add "ad_header_code" operator into the "header" tag
+- add "ad_body_code" operator to the beginning of "body" tag
+- place ad codes on the website
