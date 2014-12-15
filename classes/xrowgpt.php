@@ -297,7 +297,7 @@ class xrowgpt
         <!-- Ende Einbau im Header -->
         }else{
             googletag.cmd.push(function() {
-                if (page_width >= 1030) {
+                if (page_width >= 1100) {
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [[120, 600],[160, 600],[200, 600]], "oms_gpt_skyscraper").addService(googletag.pubads());
                 }
 
