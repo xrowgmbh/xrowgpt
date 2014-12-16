@@ -235,6 +235,8 @@ class xrowgpt
             }
         }
 
+        $custom_tags .= 'googletag.pubads().setTargeting("Test", '. $xrowgptINI->variable( 'GeneralSettings', 'Testmode' ) .' );';
+
         $string .= '<script type="text/javascript">
          if (device == "mobile"){
             var src = "http://oms.nuggad.net/javascripts/nuggad-ls.js";
@@ -302,7 +304,7 @@ class xrowgpt
                 }
 
                 if (page_width >= 748) {
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 90], "oms_gpt_superbanner").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 90], "oms_gpt_superbanner").addService(googletag.pubads().googletag.pubads().collapseEmptyDivs());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner1").addService(googletag.pubads());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner2").addService(googletag.pubads());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 92], "oms_gpt_superbanner3").addService(googletag.pubads());
