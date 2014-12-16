@@ -235,7 +235,10 @@ class xrowgpt
             }
         }
 
-        $custom_tags .= 'googletag.pubads().setTargeting("Test", '. $xrowgptINI->variable( 'GeneralSettings', 'Testmode' ) .' );';
+        if( $xrowgptINI->hasVariable( 'GeneralSettings', 'Mode' )  )
+        {
+            $custom_tags .= "googletag.pubads().setTargeting('key', '". $xrowgptINI->variable( 'GeneralSettings', 'Mode' ) ."' );";
+        }
 
         $string .= '<script type="text/javascript">
          if (device == "mobile"){
@@ -306,8 +309,8 @@ class xrowgpt
                 if (page_width >= 748) {
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 90], "oms_gpt_superbanner").addService(googletag.pubads());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner1").addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner2").addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 92], "oms_gpt_superbanner3").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 92], "oms_gpt_superbanner2").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 93], "oms_gpt_superbanner3").addService(googletag.pubads());
                 }
                 else if (page_width >= 488) {
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 60], "oms_gpt_fullbanner").addService(googletag.pubads());
