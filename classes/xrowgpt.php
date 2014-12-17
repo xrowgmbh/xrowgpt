@@ -186,7 +186,7 @@ class xrowgpt
                         if (device != "desktop"){
                         <!-- SZM VERSION="2.0" -->
                         var iam_data = {
-                        "st":"hannovin", // site
+                        "st": ivw_identifier, // site
                         "cp":"' . $keyword_info["ivw_keyword"] . '_" + ivwletter, // code SZMnG-System 2.0
                         "sv":"mo"
                         }
@@ -195,7 +195,7 @@ class xrowgpt
                         }else{
                         <!-- SZM VERSION="2.0" -->
                         var iam_data = {
-                        "st":"hannovin", // site
+                        "st": ivw_identifier, // site
                         "cp":"' . $keyword_info["ivw_keyword"] . '", // code SZMnG-System 2.0
                         "sv":"' . $keyword_info["ivw_sv"] . '", // i2= FRABO TAG aktiv Async, in= FRABO TAG aktiv   ke= deaktiviert (nur auf der Startseite)
                         "co":"kommentar" // comment
@@ -211,7 +211,8 @@ class xrowgpt
     public static function buildGPTCode( $keyword = array() )
     {
         $xrowgptINI = eZINI::instance("xrowgpt.ini");
-        $oms_code = $xrowgptINI->variable( 'OmsSettings', 'OmsCode' );
+        $oms_code = $xrowgptINI->variable( 'OmsSettings', 'AdServerID' );
+        $oms_code_mobile = $xrowgptINI->variable( 'OmsSettings', 'AdServerIDMobile' );
         $site = $xrowgptINI->variable( 'OmsSettings', 'OmsSite' );
         $oms_site_mobile = $xrowgptINI->variable( 'OmsSettings', 'OmsSiteMobile' );
         $string = "";
@@ -262,7 +263,7 @@ class xrowgpt
 
         var oms_site="' . $oms_site_mobile . '";
         var WLRCMD="";
-        var oms_network="' . $keyword["keyword"] . '";
+        oms_network="oms"
         var nuggn='.$xrowgptINI->variable( 'OmsSettings', 'Nuggn' ).';
         var nugghost="http://"+oms_network+".nuggad.net";
 
@@ -285,10 +286,10 @@ class xrowgpt
 
             if (window.innerWidth >= 340) {
                 googletag.cmd.push(function() {
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-2\').addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone,[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-3\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code_mobile.'/\'+oms_site+\'/\'+oms_zone+\'/pos1\',[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code_mobile.'/\'+oms_site+\'/\'+oms_zone+\'/pos2\',[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code_mobile.'/\'+oms_site+\'/\'+oms_zone+\'/pos3\',[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-2\').addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code_mobile.'/\'+oms_site+\'/\'+oms_zone+\'/pos4\',[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-3\').addService(googletag.pubads());
                     googletag.pubads().setTargeting(\'nielsen\',\'1\');
                     if (typeof NUGGarr !=\'undefined\') {
                         for (var key in NUGGarr) {
@@ -369,6 +370,9 @@ class xrowgpt
         $string .= "var device = 'desktop';";
         $string .= "var ivwletter = '';";
         $string .= "var current_breakpoint = '';";
+        $string .= "var oms_zone_addon = '';";
+        $string .= "var ivw_identifier = '" . $xrowgptINI->variable( 'IVWSettings', 'Identifier' ) . "';";
+        $string .= "if (page_width < 1100){oms_zone_addon = '_nowp';}";
         
         $string .= "
                 for (i = 1; i < breakpoints.length; i++) {
@@ -384,6 +388,7 @@ class xrowgpt
                         {
                             var device = 'mobile';
                             var ivwletter = 'm';
+                            var ivw_identifier = '" . $xrowgptINI->variable( 'IVWSettings', 'IdentifierMobile' ) . "';
                         }
                         break;
                     }
@@ -410,11 +415,10 @@ class xrowgpt
         //add oms stuff when ads are displayed
         if( $show_ads )
         {
-            //TODO: $node statt false. verbessern?
             $keyword_info = xrowgpt::getKeyword( $node );
             $string .= '<script language="JavaScript" type="text/javascript">
                         var oms_site = "' . $xrowgptINI->variable( 'OmsSettings', 'OmsSite' ) . '";
-                        var oms_zone = "' . $keyword_info["keyword"] . '";
+                        var oms_zone = "' . $keyword_info["keyword"] . '" + oms_zone_addon;
                         </script>
                         <script type="text/javascript" src="/extension/xrowgpt/design/xrowgpt/javascript/omsvjs14_1.js"></script>
                         <script>

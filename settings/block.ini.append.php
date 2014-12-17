@@ -11,7 +11,11 @@ ManualAddingOfItems=disabled
 #CustomAttributes[]=zone_override
 ViewList[]=pos1
 ViewList[]=pos2
-ViewName[pos1]=Banner Position 1
-ViewName[pos2]=Banner Position 2
+ViewList[]=pos1_special
+ViewList[]=pos2_special
+ViewName[pos1]=Banner Position 1(alle)
+ViewName[pos2]=Banner Position 2(alle)
+ViewName[pos1_special]=Banner Position 1(nur Tablet und Mobil)
+ViewName[pos2_special]=Banner Position 2(nur Tablet und Mobil)
 
 */ ?>
