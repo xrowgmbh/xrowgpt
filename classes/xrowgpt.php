@@ -296,6 +296,9 @@ class xrowgpt
                             googletag.pubads().setTargeting(key, NUGGarr[key]);
                         }
                     };
+
+                    ' . $custom_tags . '
+
                     googletag.enableServices();
                 });
             }
