@@ -9,7 +9,7 @@ class xrowGPToperator
     
     function operatorList()
     {
-        return array( "ad_header_code", "ad_body_code" );
+        return array( "ad_header_code", "ad_body_code", "ad_code" );
     }
 
     function namedParameterPerOperator()
@@ -21,7 +21,8 @@ class xrowGPToperator
     {
         return array( 
                         'ad_header_code' => array( 'node' => array( 'type' => 'string' , 'required' => false, "default" => false )),
-                        'ad_body_code' => array(  'node' => array( 'type' => 'string' , 'required' => false, "default" => false ) )
+                        'ad_body_code' => array( 'node' => array( 'type' => 'string' , 'required' => false, "default" => false ) ),
+                        'ad_code' => array( 'codes' => array( 'type' => 'array' , 'required' => true, "default" => array() ) )
         );
     }
 
@@ -43,6 +44,25 @@ class xrowGPToperator
         elseif ($operatorName == "ad_body_code")
         {
             $operatorValue = xrowgpt::buildIVWCode( $node );
+        }
+        elseif ($operatorName == "ad_code")
+        {
+            $html = "";
+            if( xrowgpt::checkDisplayStatus() )
+            {
+                $code_array = $namedParameters['codes'];
+
+                foreach ( $code_array as $key => $code)
+                {
+                    $html .='
+                    <div id="'. $code .'">
+                        <script type="text/javascript">
+                            googletag.cmd.push(function() { googletag.display("'. $code .'")});
+                        </script>
+                    </div>';
+                }
+            }
+            $operatorValue = $html;
         }
     }
 }
