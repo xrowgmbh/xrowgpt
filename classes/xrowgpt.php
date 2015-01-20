@@ -307,7 +307,7 @@ class xrowgpt
         }else{
             googletag.cmd.push(function() {
                 if (page_width >= 1100) {
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [[120, 600],[160, 600],[200, 600]], "oms_gpt_skyscraper").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone + oms_zone_addon, [[120, 600],[160, 600],[200, 600]], "oms_gpt_skyscraper").addService(googletag.pubads());
                 }
 
                 if (page_width >= 748) {
@@ -421,7 +421,7 @@ class xrowgpt
             $keyword_info = xrowgpt::getKeyword( $node );
             $string .= '<script language="JavaScript" type="text/javascript">
                         var oms_site = "' . $xrowgptINI->variable( 'OmsSettings', 'OmsSite' ) . '";
-                        var oms_zone = "' . $keyword_info["keyword"] . '" + oms_zone_addon;
+                        var oms_zone = "' . $keyword_info["keyword"] . '";
                         </script>
                         <script type="text/javascript" src="/extension/xrowgpt/design/xrowgpt/javascript/omsvjs14_1.js"></script>
                         <script>
