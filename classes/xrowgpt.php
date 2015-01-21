@@ -307,11 +307,11 @@ class xrowgpt
         }else{
             googletag.cmd.push(function() {
                 if (page_width >= 1100) {
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone + oms_zone_addon, [[120, 600],[160, 600],[200, 600]], "oms_gpt_skyscraper").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [[120, 600],[160, 600],[200, 600]], "oms_gpt_skyscraper").addService(googletag.pubads());
                 }
 
                 if (page_width >= 748) {
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 90], "oms_gpt_superbanner").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone + oms_zone_addon, [728, 90], "oms_gpt_superbanner").addService(googletag.pubads());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner1").addService(googletag.pubads());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 92], "oms_gpt_superbanner2").addService(googletag.pubads());
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 93], "oms_gpt_superbanner3").addService(googletag.pubads());
