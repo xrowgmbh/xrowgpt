@@ -1,9 +1,10 @@
 <?php /* #?ini charset="utf-8"?
  
 [General]
-AllowedTypes[]=xrowgpt_Banner
+#its the new block with the old name!
+AllowedTypes[]=advision_Banner
 
-[xrowgpt_Banner]
+[advision_Banner]
 Name=Werbebanner
 NumberOfValidItems=1
 #NumberOfArchivedItems=5
