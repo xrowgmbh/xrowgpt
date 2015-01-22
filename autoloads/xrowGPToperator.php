@@ -55,7 +55,7 @@ class xrowGPToperator
                 foreach ( $code_array as $key => $code)
                 {
                     $html .='
-                    <div id="'. $code .'">
+                    <div id="'. $code .'" class="block">
                         <script type="text/javascript">
                             googletag.cmd.push(function() { googletag.display("'. $code .'")});
                         </script>
