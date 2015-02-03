@@ -221,7 +221,7 @@ class xrowgpt
 
         if ( empty($path) )
         {
-            $custom_tags = 'googletag.pubads().setTargeting("NodeID", ' . $GLOBALS["eZRequestedModuleParams"]['module_name'] . '_' . $GLOBALS["eZRequestedModuleParams"]['function_name'] . ' );';
+            $custom_tags = 'googletag.pubads().setTargeting("NodeID", "' . $GLOBALS["eZRequestedModuleParams"]['module_name'] . '_' . $GLOBALS["eZRequestedModuleParams"]['function_name'] . '" );';
         }
         else
         {
