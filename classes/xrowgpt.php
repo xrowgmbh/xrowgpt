@@ -137,7 +137,8 @@ class xrowgpt
         }
         
         //$ivw_sv = "in"; // in = frabo tag aktiv
-        $ivw_sv = "i2"; //frabo tag activ async
+        //$ivw_sv = "i2"; //frabo tag activ async
+        $ivw_sv = "ke";
         if( end($path) == $xrowgptINI->variable( 'IVWSettings', 'StartPage' ) )
         {
             $ivw_sv = "ke";
@@ -188,7 +189,7 @@ class xrowgpt
                         var iam_data = {
                         "st": ivw_identifier, // site
                         "cp":"' . $keyword_info["ivw_keyword"] . '_" + ivwletter, // code SZMnG-System 2.0
-                        "sv":"mo"
+                        "sv":"ke"
                         }
                         iom.c(iam_data, 1);
                         <!--/SZM -->
