@@ -183,6 +183,8 @@ class xrowgpt
         {
             //todo, wo kommt die node her?
             $keyword_info = xrowgpt::getKeyword( $node );
+            //hotfix agof deactivation
+            $keyword_info["ivw_sv"] = "ke";
             $string .= '<script type="text/javascript">
                         if (device != "desktop"){
                         <!-- SZM VERSION="2.0" -->
