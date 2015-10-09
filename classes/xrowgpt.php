@@ -143,7 +143,7 @@ class xrowgpt
         {
             $ivw_sv = "ke";
         }
-        elseif ( $ivw_keyword === $ivw_keywords[$xrowgptINI->variable( 'IVWSettings', 'StartPage' )] )
+        elseif ( isset($ivw_keyword) && $ivw_keyword === $ivw_keywords[$xrowgptINI->variable( 'IVWSettings', 'StartPage' )] )
         {
             unset($ivw_keyword);
         }
@@ -366,7 +366,7 @@ class xrowgpt
         $string .= "var page_width = window.innerWidth;";
         $string .= "var breakpoints = [];";
         
-        foreach ( $bp_settings[Breakpoint] as $number => $size)
+        foreach ( $bp_settings["Breakpoint"] as $number => $size)
         {
             $string.= 'breakpoints[' . $number . '] = "' . $size . '";';
         }
@@ -409,6 +409,7 @@ class xrowgpt
     {
         $xrowgptINI = eZINI::instance("xrowgpt.ini");
         $show_ads = xrowgpt::checkDisplayStatus();
+        $string = "";
 
         $string .= xrowgpt::getSettingVariables();
 
