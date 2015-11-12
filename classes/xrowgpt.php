@@ -77,7 +77,16 @@ class xrowgpt
         $uri = "";
         //activate this to run testmode everywhere
         //return "test";
-
+        
+        if($xrowgptINI->hasVariable( 'KeywordSettings', 'ivwLang' ))
+        {
+           $ivw_lang = $xrowgptINI->variable( 'KeywordSettings', 'ivwLang' );
+        }
+        else 
+        {
+            $ivw_lang = $xrowgptINI->variable( 'KeywordSettings', 'ivwLangDefault' );
+        }
+      
         if ( $tpl->hasVariable('module_result') )
         {
             $moduleResult = $tpl->variable('module_result');
@@ -150,7 +159,7 @@ class xrowgpt
 
         if (isset($normal_keyword) && isset($ivw_keyword) )
         {
-            return array( "keyword" => $normal_keyword, "path" => $path, "ivw_keyword" => $ivw_keyword, "ivw_sv" => $ivw_sv );
+            return array( "keyword" => $normal_keyword, "path" => $path, "ivw_keyword" => $ivw_keyword, "ivw_sv" => $ivw_sv, "ivw_lang" => $ivw_lang );
         }
 
         //no keyword found, use the default!
@@ -172,7 +181,7 @@ class xrowgpt
         {
             $ivw_keyword = $xrowgptINI->variable( 'IVWSettings', 'KeywordDefault' );
         }
-        return array( "keyword" => $normal_keyword, "path" => $path, "ivw_keyword" => $ivw_keyword, "ivw_sv" => $ivw_sv );
+        return array( "keyword" => $normal_keyword, "path" => $path, "ivw_keyword" => $ivw_keyword, "ivw_sv" => $ivw_sv, "ivw_lang" => $ivw_lang );
     }
 
     public static function buildIVWCode( $node = false )
@@ -190,7 +199,7 @@ class xrowgpt
                         <!-- SZM VERSION="2.0" -->
                         var iam_data = {
                         "st": ivw_identifier, // site
-                        "cp":"' . $keyword_info["ivw_keyword"] . '_" + ivwletter, // code SZMnG-System 2.0
+                        "cp":"' . $keyword_info["ivw_keyword"] . $keyword_info["ivw_lang"] . '_" + ivwletter, // code SZMnG-System 2.0
                         "sv":"ke"
                         }
                         iom.c(iam_data, 1);
@@ -199,7 +208,7 @@ class xrowgpt
                         <!-- SZM VERSION="2.0" -->
                         var iam_data = {
                         "st": ivw_identifier, // site
-                        "cp":"' . $keyword_info["ivw_keyword"] . '", // code SZMnG-System 2.0
+                        "cp":"' . $keyword_info["ivw_keyword"] . $keyword_info["ivw_lang"] . '", // code SZMnG-System 2.0
                         "sv":"' . $keyword_info["ivw_sv"] . '", // i2= FRABO TAG aktiv Async, in= FRABO TAG aktiv   ke= deaktiviert (nur auf der Startseite)
                         "co":"kommentar" // comment
                         }
