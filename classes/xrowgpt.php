@@ -124,14 +124,37 @@ class xrowgpt
 
         $keywords = $xrowgptINI->variable( 'KeywordSettings', 'KeywordMatching' );
         $ivw_keywords = $xrowgptINI->variable( 'KeywordSettings', 'IVWMatching' );
-        //write "test" zone for test module
-        if ( $uri == "/xrowgpt/test" )
+        $module_and_view = $GLOBALS["eZRequestedModuleParams"]['module_name'] ."/". $GLOBALS["eZRequestedModuleParams"]['function_name'];
+        $ivw_module_matching = $xrowgptINI->variable( 'KeywordSettings', 'IVWModuleMatching' );
+        $keyword_module_matching = $xrowgptINI->variable( 'KeywordSettings', 'KeywordModuleMatching' );
+ 
+        
+        //set module keyword
+        if( $module_and_view != "content/view" AND array_key_exists( $module_and_view, $keyword_module_matching) ) 
         {
-            return array( "keyword" => "test", "path" => $path, "ivw_keyword" => "test", "ivw_lang" => $ivw_lang );
+            $tmp_module_keyword = $keyword_module_matching[$module_and_view];
         }
-        else if( strpos($uri, "content/search") )
+
+        //set module ivw keyword
+        if( $module_and_view != "content/view" AND array_key_exists( $module_and_view, $ivw_module_matching) )
         {
-            return array( "keyword" => $xrowgptINI->variable( 'KeywordSettings', 'KeywordDefault' ), "path" => $path, "ivw_keyword" => "suche", "ivw_sv" => "in", "ivw_lang" => $ivw_lang );
+            $tmp_ivw_module_keyword = $ivw_module_matching[$module_and_view];
+        }
+
+        if( isset($tmp_ivw_module_keyword) OR isset($tmp_module_keyword) )
+        {
+            if( isset($tmp_ivw_module_keyword) AND isset($tmp_module_keyword) )
+            {
+                return array( "keyword" => $tmp_module_keyword, "path" => $path, "ivw_keyword" => $tmp_ivw_module_keyword, "ivw_sv" => "in", "ivw_lang" => $ivw_lang );
+            }
+            elseif ( isset($tmp_ivw_module_keyword) ) 
+            {
+                return array( "keyword" => $xrowgptINI->variable( 'KeywordSettings', 'KeywordDefault' ), "path" => $path, "ivw_keyword" => $tmp_ivw_module_keyword, "ivw_sv" => "in", "ivw_lang" => $ivw_lang );
+            }
+            elseif ( isset($tmp_module_keyword) )
+            {
+                return array( "keyword" => $tmp_module_keyword, "path" => $path, "ivw_keyword" => $xrowgptINI->variable( 'IVWSettings', 'KeywordDefault' ), "ivw_sv" => "in", "ivw_lang" => $ivw_lang );
+            }
         }
 
         foreach ( array_reverse( $path ) as $path_element )
