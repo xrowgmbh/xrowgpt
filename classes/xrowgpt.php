@@ -86,10 +86,14 @@ class xrowgpt
         {
             $ivw_lang = $xrowgptINI->variable( 'KeywordSettings', 'ivwLangDefault' );
         }
-      
+
         if ( $tpl->hasVariable('module_result') )
         {
             $moduleResult = $tpl->variable('module_result');
+        }
+
+        if ( isset($moduleResult["path"]) AND ( is_array($moduleResult["path"]) AND count($moduleResult["path"]) >= 1 ) )
+        {
             $uri = $moduleResult["uri"];
 
             foreach ( $moduleResult["path"] as $element )
@@ -112,17 +116,22 @@ class xrowgpt
             $path = explode("/", $node->PathString);
             $uri = $node->urlAlias();
         }
+        else if ( isset($moduleResult["uri"]) )
+        {
+            //fallback if the called page seems not to be a node
+            $uri = $moduleResult["uri"];
+        }
 
         $keywords = $xrowgptINI->variable( 'KeywordSettings', 'KeywordMatching' );
         $ivw_keywords = $xrowgptINI->variable( 'KeywordSettings', 'IVWMatching' );
         //write "test" zone for test module
         if ( $uri == "/xrowgpt/test" )
         {
-            return array( "keyword" => "test", "path" => $path, "ivw_keyword" => "test" );
+            return array( "keyword" => "test", "path" => $path, "ivw_keyword" => "test", "ivw_lang" => $ivw_lang );
         }
         else if( strpos($uri, "content/search") )
         {
-            return array( "keyword" => $xrowgptINI->variable( 'KeywordSettings', 'KeywordDefault' ), "path" => $path, "ivw_keyword" => "suche", "ivw_sv" => "in" );
+            return array( "keyword" => $xrowgptINI->variable( 'KeywordSettings', 'KeywordDefault' ), "path" => $path, "ivw_keyword" => "suche", "ivw_sv" => "in", "ivw_lang" => $ivw_lang );
         }
 
         foreach ( array_reverse( $path ) as $path_element )
