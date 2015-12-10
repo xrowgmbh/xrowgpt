@@ -128,7 +128,6 @@ class xrowgpt
         $ivw_module_matching = $xrowgptINI->variable( 'KeywordSettings', 'IVWModuleMatching' );
         $keyword_module_matching = $xrowgptINI->variable( 'KeywordSettings', 'KeywordModuleMatching' );
  
-        
         //set module keyword
         if( $module_and_view != "content/view" AND array_key_exists( $module_and_view, $keyword_module_matching) ) 
         {
@@ -176,7 +175,7 @@ class xrowgpt
                 break;
             }
         }
-        
+
         //$ivw_sv = "in"; // in = frabo tag aktiv
         //$ivw_sv = "i2"; //frabo tag activ async
         $ivw_sv = "ke";
@@ -188,6 +187,7 @@ class xrowgpt
         {
             unset($ivw_keyword);
         }
+
 
         if (isset($normal_keyword) && isset($ivw_keyword) )
         {
@@ -204,17 +204,20 @@ class xrowgpt
             $normal_keyword = $xrowgptINI->variable( 'KeywordSettings', 'KeywordDefault' );
         }
 
-        //no ivw keyword found, use the default!
-        if ( $xrowgptINI->hasVariable( 'KeywordSettings', 'SiteaccessIVWKeywordDefault' ) )
+        if ( !isset($ivw_keyword) OR ( isset($ivw_keyword) AND trim($ivw_keyword) == "" ) )
         {
-            $ivw_keyword = $xrowgptINI->variable( 'KeywordSettings', 'SiteaccessIVWKeywordDefault' );
-        }
-        elseif( !isset($ivw_keyword) )
-        {
-            $ivw_keyword = $xrowgptINI->variable( 'IVWSettings', 'KeywordDefault' );
+            //no ivw keyword found, use the default!
+            if ( $xrowgptINI->hasVariable( 'KeywordSettings', 'SiteaccessIVWKeywordDefault' ) )
+            {
+                $ivw_keyword = $xrowgptINI->variable( 'KeywordSettings', 'SiteaccessIVWKeywordDefault' );
+            }
+            else
+            {
+                $ivw_keyword = $xrowgptINI->variable( 'IVWSettings', 'KeywordDefault' );
+            }
         }
         return array( "keyword" => $normal_keyword, "path" => $path, "ivw_keyword" => $ivw_keyword, "ivw_sv" => $ivw_sv, "ivw_lang" => $ivw_lang );
-    }
+   }
 
     public static function buildIVWCode( $node = false )
     {
