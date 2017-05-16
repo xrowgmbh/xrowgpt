@@ -8,7 +8,7 @@ var wsite=oms_site;
 var ccat=btcode;
 var oms_random=Math.floor(Math.random()*10000000000);
 
-document.write('<scr'+'ipt src="http://oms.nuggad.net/rc?nuggn=1615459509&nuggtg='+encodeURIComponent(oms_zone)+'" type="text/javascript"><\/scr'+'ipt>');
+document.write('<scr'+'ipt src="https://oms.nuggad.net/rc?nuggn=1615459509&nuggtg='+encodeURIComponent(oms_zone)+'" type="text/javascript"><\/scr'+'ipt>');
 
 
 ada=true;
@@ -16,7 +16,7 @@ ada=true;
 if(ada==true){
 
 
-document.write('<scr'+'ipt type="text/javascript" language="JavaScript" src="http://ad.yieldlab.net/yp/26865,26867,26869,26871?ts='+ oms_random +'"><\/scr'+'ipt>');
+document.write('<scr'+'ipt type="text/javascript" language="JavaScript" src="https://ad.yieldlab.net/yp/26865,26867,26869,26871?ts='+ oms_random +'"><\/scr'+'ipt>');
 
 
 
