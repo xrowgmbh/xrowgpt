@@ -471,7 +471,7 @@ class xrowgpt
                         var oms_site = "' . $xrowgptINI->variable( 'OmsSettings', 'OmsSite' ) . '";
                         var oms_zone = "' . $keyword_info["keyword"] . '";
                         </script>
-                        <script type="text/javascript" src="/extension/xrowgpt/design/xrowgpt/javascript/omsvjs14_1.js"></script>
+                        <script type="text/javascript" src="//www.video.oms.eu/ada/cloud/omsv_container_151.js" charset="UTF-8"></script>
                         <script>
                         try
                         {
