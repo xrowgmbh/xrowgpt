@@ -41,9 +41,10 @@ class xrowgpt
                     $moduleResult = $tpl->variable('module_result');
                     foreach ( $moduleResult["path"] as $element )
                     {
-                        $path[] = $element["node_id"];
+                        if (isset($element['node_id'])) {
+                            $path[] = $element['node_id'];
+                        }
                     }
-                    
                 }
                 else if ( isset( $tpl->Variables[""]["node"] ) )
                 {
