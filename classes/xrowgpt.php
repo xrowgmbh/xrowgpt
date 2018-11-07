@@ -20,7 +20,15 @@ class xrowgpt
         {
             $Module = $GLOBALS['eZRequestedModule'];
             $namedParameters = $Module->NamedParameters;
-
+            if (isset($Module->Module["name"]) && $Module->Module["name"] != "")
+            {
+                $single_module_excludes = $xrowgptINI->variable( 'GeneralSettings', 'SingleModuleExcludes' );
+                if ( in_array( $Module->Module["name"], $single_module_excludes ) )
+                {
+                    return false;
+                }
+                
+            }
             if ( isset($namedParameters["NodeID"]) && is_numeric($namedParameters["NodeID"]) )
             {
                 //check if its a single page exclude
