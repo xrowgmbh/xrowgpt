@@ -379,7 +379,6 @@ class xrowgpt
                     googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 63], "oms_gpt_fullbanner3").addService(googletag.pubads());
                 }
                 googletag.pubads().enableSingleRequest();
-                googletag.pubads().enableSyncRendering(); // Add sync rendering mode
                 ' . $custom_tags . '
 
                 <!-- Hier wird das Bundesland definiert -->
