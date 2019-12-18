@@ -362,21 +362,28 @@ class xrowgpt
         <!-- Ende Einbau im Header -->
         }else{
             googletag.cmd.push(function() {
+                /*
+                    necessarry for zones with an appendix like "my_zone/appendix." in xrowgpt.ini
+                    With Appendix:    1234/my_site/my_zone/appendix.superbanner
+                    Without Appendix: 1234/my_site/my_zone/superbanner
+                */
+               if (!oms_zone.endsWith(".")) {
+                    oms_zone = oms_zone + "/";
+               }
                 if (page_width >= 1100) {
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [[120, 600],[160, 600],[200, 600]], "oms_gpt_skyscraper").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'skyscraper\', [[120, 600],[160, 600],[200, 600]], "oms_gpt_skyscraper").addService(googletag.pubads());
                 }
 
                 if (page_width >= 748) {
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone + oms_zone_addon, [728, 90], "oms_gpt_superbanner").addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 91], "oms_gpt_superbanner1").addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 92], "oms_gpt_superbanner2").addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [728, 93], "oms_gpt_superbanner3").addService(googletag.pubads());
-                }
-                else if (page_width >= 488) {
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 60], "oms_gpt_fullbanner").addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 61], "oms_gpt_fullbanner1").addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 62], "oms_gpt_fullbanner2").addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone, [468, 63], "oms_gpt_fullbanner3").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'superbanner\', [728, 90], "oms_gpt_superbanner").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'inlist-banner-1\', [[728, 90],[728, 91]], "oms_gpt_superbanner1").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'inlist-banner-2\', [[728, 90],[728, 92]], "oms_gpt_superbanner2").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'inlist-banner-3\', [[728, 90],[728, 93]], "oms_gpt_superbanner3").addService(googletag.pubads());
+                } else if (page_width >= 488) {
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'inlist-banner-1\', [468, 60], "oms_gpt_fullbanner").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'inlist-banner-1\', [[468, 60],[468, 61]], "oms_gpt_fullbanner1").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'inlist-banner-2\', [[468, 60],[468, 62]], "oms_gpt_fullbanner2").addService(googletag.pubads());
+                    googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'inlist-banner-3\', [[468, 60],[468, 63]], "oms_gpt_fullbanner3").addService(googletag.pubads());
                 }
                 googletag.pubads().enableSingleRequest();
                 ' . $custom_tags . '
@@ -428,10 +435,8 @@ class xrowgpt
         $string .= "var device = 'desktop';";
         $string .= "var ivwletter = '';";
         $string .= "var current_breakpoint = '';";
-        $string .= "var oms_zone_addon = '';";
         $string .= "var ivw_identifier = '" . $xrowgptINI->variable( 'IVWSettings', 'Identifier' ) . "';";
-        $string .= "if (page_width < 1100){oms_zone_addon = '_nowp';}";
-        
+
         $string .= "
                 for (i = 1; i < breakpoints.length; i++) {
                     if ( page_width < breakpoints[i] )
