@@ -200,6 +200,11 @@ class xrowgpt
 
         if (isset($normal_keyword) && isset($ivw_keyword) )
         {
+            if ($xrowgptINI->hasVariable( 'KeywordSettings', 'SiteaccessIVWKeywordSubpage' ) && $xrowgptINI->hasVariable( 'IVWSettings', 'HomePage' ) && end($path) != $xrowgptINI->variable( 'IVWSettings', 'HomePage' ) )
+            {
+                $ivw_keyword = $xrowgptINI->variable( 'KeywordSettings', 'SiteaccessIVWKeywordSubpage' );
+            }
+            
             return array( "keyword" => $normal_keyword, "path" => $path, "ivw_keyword" => $ivw_keyword, "ivw_sv" => $ivw_sv, "ivw_lang" => $ivw_lang );
         }
 
@@ -225,6 +230,12 @@ class xrowgpt
                 $ivw_keyword = $xrowgptINI->variable( 'IVWSettings', 'KeywordDefault' );
             }
         }
+
+        if ($xrowgptINI->hasVariable( 'KeywordSettings', 'SiteaccessIVWKeywordSubpage' ) && $xrowgptINI->hasVariable( 'IVWSettings', 'HomePage' ) && end($path) != $xrowgptINI->variable( 'IVWSettings', 'HomePage' ) )
+        {
+            $ivw_keyword = $xrowgptINI->variable( 'KeywordSettings', 'SiteaccessIVWKeywordSubpage' );
+        }
+        
         return array( "keyword" => $normal_keyword, "path" => $path, "ivw_keyword" => $ivw_keyword, "ivw_sv" => $ivw_sv, "ivw_lang" => $ivw_lang );
    }
 
