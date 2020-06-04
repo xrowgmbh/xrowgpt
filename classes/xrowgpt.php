@@ -152,7 +152,7 @@ class xrowgpt
         if($xrowgptINI->hasVariable( 'IVWSettings', 'HomePage' )) {
             $homePageId = $xrowgptINI->variable( 'IVWSettings', 'HomePage' );
             $newLoginPageModule = $homePageId."/user/login";
-            if(array_key_exists( $newLoginPageModule, $ivw_module_matching)) {
+            if(array_key_exists( $newLoginPageModule, $ivw_module_matching) && $module_and_view == "user/login") {
                 $tmp_ivw_module_keyword = $ivw_module_matching[$newLoginPageModule];
             }
         }
