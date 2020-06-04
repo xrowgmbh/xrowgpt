@@ -148,6 +148,14 @@ class xrowgpt
         {
             $tmp_ivw_module_keyword = $ivw_module_matching[$module_and_view];
         }
+        
+        if($xrowgptINI->hasVariable( 'IVWSettings', 'HomePage' )) {
+            $homePageId = $xrowgptINI->variable( 'IVWSettings', 'HomePage' );
+            $newLoginPageModule = $homePageId."/user/login";
+            if(array_key_exists( $newLoginPageModule, $ivw_module_matching)) {
+                $tmp_ivw_module_keyword = $ivw_module_matching[$newLoginPageModule];
+            }
+        }
 
         if( isset($tmp_ivw_module_keyword) OR isset($tmp_module_keyword) )
         {
@@ -231,7 +239,10 @@ class xrowgpt
             }
         }
 
-        if ($xrowgptINI->hasVariable( 'KeywordSettings', 'SiteaccessIVWKeywordSubpage' ) && $xrowgptINI->hasVariable( 'IVWSettings', 'HomePage' ) && end($path) != $xrowgptINI->variable( 'IVWSettings', 'HomePage' ) )
+        if ($xrowgptINI->hasVariable( 'KeywordSettings', 'SiteaccessIVWKeywordSubpage' ) && 
+            $xrowgptINI->hasVariable( 'IVWSettings', 'HomePage' ) && 
+            end($path) != $xrowgptINI->variable( 'IVWSettings', 'HomePage' ) && 
+            !array_key_exists(end($path), $ivw_keywords) )
         {
             $ivw_keyword = $xrowgptINI->variable( 'KeywordSettings', 'SiteaccessIVWKeywordSubpage' );
         }
