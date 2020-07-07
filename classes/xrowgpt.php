@@ -290,7 +290,6 @@ class xrowgpt
     {
         $xrowgptINI = eZINI::instance("xrowgpt.ini");
         $oms_code = $xrowgptINI->variable( 'OmsSettings', 'AdServerID' );
-        $oms_code_mobile = $xrowgptINI->variable( 'OmsSettings', 'AdServerIDMobile' );
         $site = $xrowgptINI->variable( 'OmsSettings', 'OmsSite' );
         $oms_site_mobile = $xrowgptINI->variable( 'OmsSettings', 'OmsSiteMobile' );
         $string = "";
@@ -320,12 +319,6 @@ class xrowgpt
         }
 
         $string .= '<script type="text/javascript">
-         if (device == "mobile"){
-            var src = "http://oms.nuggad.net/javascripts/nuggad-ls.js";
-            document.write(\'<scr\' + \'ipt src="\' + src + \'"></scr\' + \'ipt>\');
-         }</script>
-                
-        <script type="text/javascript">
             //Synchron Call
             
               (function() {
@@ -340,46 +333,19 @@ class xrowgpt
         <!-- nugg.ad mobile call -->
 
         var oms_site="' . $oms_site_mobile . '";
-        var WLRCMD="";
-        oms_network="oms"
-        var nuggn='.$xrowgptINI->variable( 'OmsSettings', 'Nuggn' ).';
-        var nugghost="http://"+oms_network+".nuggad.net";
+        if (window.innerWidth >= 340) {
+            googletag.cmd.push(function() {
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'/pos1\',[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'/pos2\',[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'/pos3\',[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-2\').addService(googletag.pubads());
+                googletag.defineSlot(\'/'.$oms_code.'/\'+oms_site+\'/\'+oms_zone+\'/pos4\',[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-3\').addService(googletag.pubads());
+                googletag.pubads().setTargeting(\'nielsen\',\'1\');
 
-        <!-- google mobile gpt -->
-            nuggad.init({"rptn-url": nugghost}, function(api) {
-                api.rc({"nuggn": nuggn});
+                ' . $custom_tags . '
+
+                googletag.enableServices();
             });
-
-            //!-- Aufbereitung WLRCMD Variable --
-            var NUGGarr=Array();
-            if (typeof WLRCMD !=\'undefined\' && WLRCMD !=\'\')
-            { arrALL=WLRCMD.split(";");
-            for (TUPL in arrALL) {
-                if (arrALL[TUPL].indexOf(\'=\') !=-1){
-                    NUGGarr[arrALL[TUPL].split(\'=\')[0]]=arrALL[TUPL].split(\'=\')[1];
-                }
-            }
-            }
-            //!-- ENDE Aufbereitung WLRCMD Variable --
-
-            if (window.innerWidth >= 340) {
-                googletag.cmd.push(function() {
-                    googletag.defineSlot(\'/'.$oms_code_mobile.'/\'+oms_site+\'/\'+oms_zone+\'/pos1\',[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-0\').addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code_mobile.'/\'+oms_site+\'/\'+oms_zone+\'/pos2\',[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-1\').addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code_mobile.'/\'+oms_site+\'/\'+oms_zone+\'/pos3\',[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-2\').addService(googletag.pubads());
-                    googletag.defineSlot(\'/'.$oms_code_mobile.'/\'+oms_site+\'/\'+oms_zone+\'/pos4\',[[320, 50],[2, 1], [3, 1], [4, 1], [6, 1]], \'div-gpt-ad-1363251388018-3\').addService(googletag.pubads());
-                    googletag.pubads().setTargeting(\'nielsen\',\'1\');
-                    if (typeof NUGGarr !=\'undefined\') {
-                        for (var key in NUGGarr) {
-                            googletag.pubads().setTargeting(key, NUGGarr[key]);
-                        }
-                    };
-
-                    ' . $custom_tags . '
-
-                    googletag.enableServices();
-                });
-            }
+        }
         
         <!-- Ende Einbau im Header -->
         }else{
